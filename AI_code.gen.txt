@@ -1,0 +1,14 @@
+LLM Used: CODEX - GPT 5.4 Medium
+
+My Prompt:
+[bmi500](bmi500/) Can you generate the code based on the comments in the [matvec\\_multiply.py](bmi500/matvec_multiply.py) and generate tests for the function in [matvec\\_tests.py](bmi500/matvec_tests.py)?
+Prior to implementation, please evaluate the possible failure modes for the matvec_multiply function and ensure proper guardrails to prevent failure modes.
+
+LLM Response:
+Implemented the matrix/vector code in [matvec_multiply.py (line 1)](/Users/johnjun/emory/CS 500/bmi500/matvec_multiply.py:1) and added unittest coverage in [matvec_tests.py (line 1)](/Users/johnjun/emory/CS 500/bmi500/matvec_tests.py:1).
+Before implementing, I guarded against the main failure modes you called out: mismatched vector lengths, ragged matrix rows, invalid container types, non-numeric values, and the empty-matrix case. Those checks now live in dot_product and matvec_multiply at [matvec_multiply.py (line 11)](/Users/johnjun/emory/CS 500/bmi500/matvec_multiply.py:11) and [matvec_multiply.py (line 33)](/Users/johnjun/emory/CS 500/bmi500/matvec_multiply.py:33), with TypeError/ValueError raised instead of allowing silent bad results.
+The tests cover both happy paths and guardrails, including integer/float correctness, length mismatches, ragged matrices, invalid row/vector types, and non-numeric inputs at [matvec_tests.py (line 12)](/Users/johnjun/emory/CS 500/bmi500/matvec_tests.py:12).
+Verified with:
+python3 -m unittest discover -s bmi500 -p 'matvec_tests.py'
+All 12 tests passed.
+
