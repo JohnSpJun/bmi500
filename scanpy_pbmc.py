@@ -9,6 +9,14 @@ import time
 import sys
 import argparse
 
+start_time = time.time()
+
+def timestamp(name):
+    global start_time
+    end_time = time.time()
+    print(f"Time elapsed for {name}: {end_time-start_time} s")
+    start_time = end_time
+
 # %%
 sc.settings.verbosity = 3             # verbosity: errors (0), warnings (1), info (2), hints (3)
 sc.logging.print_header()
@@ -17,6 +25,7 @@ sc.settings.set_figure_params(dpi=80, facecolor='white')
 sc.settings.n_jobs = 1
 
 print(f"using {sc.settings.n_jobs} threads")
+timestamp("settings")
 
 # %%
 parser = argparse.ArgumentParser(description='Process arguments.')
@@ -32,7 +41,7 @@ dataset = args.data_set
 outdir = args.out_dir if args.out_dir.endswith('/') else args.out_dir + '/'
 nthreads = args.num_threads
 
-
+timestamp("argparse")
 #%%
 
 # I/O
@@ -46,14 +55,14 @@ adata = sc.read_10x_mtx(
 
 adata.var_names_make_unique()  # this is unnecessary if using `var_names='gene_ids'` in `sc.read_10x_mtx`
 
-
+timestamp("read 10x data")
 # %%
 # preprocessing
 
 # basic filtering
 sc.pp.filter_cells(adata, min_genes=200)
 sc.pp.filter_genes(adata, min_cells=3)
-
+timestamp("filter cells and genes")
 #%%
 # metric
 #adata.var['mt'] = adata.var_names.str.startswith('MT-')  # annotate the group of mitochondrial genes as 'mt'
@@ -68,7 +77,7 @@ sc.pp.filter_genes(adata, min_cells=3)
 sc.pp.normalize_total(adata, target_sum=1e4)
 sc.pp.log1p(adata)
 
-
+timestamp("normalize genes")
 # %%
 # highly variable genes
 
@@ -81,12 +90,13 @@ adata.raw = adata
 # filtering by highly variable genes.
 adata = adata[:, adata.var.highly_variable]
 
-
+timestamp("highly variable genes")
 #%%
 # regres out effects of total counts per cell an d% mitochondrial genes
 #sc.pp.regress_out(adata, ['total_counts', 'pct_counts_mt'])
 sc.pp.scale(adata)
 
+timestamp("scale")
 # %%
 # report adata - so we can check ot see if we are comparable to Seurat
 # adata.write(results_file)
@@ -95,14 +105,14 @@ sc.pp.scale(adata)
 # %%
 # pca.  parallel via OMP_NUM_THREADS
 sc.tl.pca(adata, svd_solver='arpack', n_comps=30)
-
+timestamp("pca")
 # adata.write(results_file)
 # adata
 
 # %%
 # neighborhood graph
 sc.pp.neighbors(adata, n_pcs=30)
-
+timestamp("neighbors")
 # %% 
 # for fixing disconnected clusters or connectivity issues:
 #sc.tl.paga(adata)
@@ -118,19 +128,28 @@ sc.pp.neighbors(adata, n_pcs=30)
 # clustering  (currently uses leiden,  previously using louvain (like Seurat).)
 #sc.tl.leiden(adata)
 sc.tl.louvain(adata, resolution = 0.5)
-
+timestamp("louvain")
 
 #%%
 # umap
 sc.tl.umap(adata, n_components=30)
+timestamp("umap")
 
 #%%
 adata.write(results_file)
 adata
+timestamp("write_h5ad")
 
 # %%
 # support t-test, wilcoxon, logistic regression
 # find marker genes
-sc.tl.rank_genes_groups(adata, 'louvain', method='wilcoxon', use_raw=True)
+import cProfile, pstats, os
+prof_file = os.path.join(outdir, f"{dataset}.rank_genes.prof")
 
+cProfile.run(
+    "sc.tl.rank_genes_groups(adata, 'louvain', method='wilcoxon', use_raw=True)",
+    prof_file
+)
+# sc.tl.rank_genes_groups(adata, 'louvain', method='wilcoxon', use_raw=True)
+timestamp("rank gene groups")
 
