@@ -1,0 +1,28 @@
+Manual Code Review
+Reviewer: John Jun
+Author Reviewed: 
+Date: 2026-09-15
+Files Reviewed: matvec_multiply.py
+
+Summary:
+I reviewed the matrix-vector multiplication implementation for correctness, readability, input validation.
+
+Findings:
+1. The code correctly computes the dot product and matrix-vector multiplication for valid numeric inputs.
+2. Input validation is present for mismatched lengths and non-numeric values, which improves robustness.
+3. The function names and docstrings are clear and make the code easy to follow.
+4. One area for improvement is ...
+5. Another possible improvement is ...
+
+Strengths:
+- Clear function decomposition
+- Good use of helper function for dot product
+- Includes tests for normal and invalid inputs
+
+Suggestions:
+- Add a test for empty vectors
+- Clarify behavior for empty matrices or zero-length inputs
+- Consider whether tuples and lists should both be accepted consistently
+
+Conclusion:
+The code is readable and mostly robust. It appears to meet the assignment goals, with a few opportunities to improve edge-case handling and test completeness.
