@@ -1,0 +1,15 @@
+scanpy==1.10.2 anndata==0.12.19 umap==0.5.12 numpy==1.26.4 scipy==1.17.1 pandas==2.3.3 scikit-learn==1.9.1 statsmodels==0.15.0 igraph==0.11.6 louvain==0.8.2 pynndescent==0.6.0
+using 1 threads
+Time elapsed for settings: 7.059635877609253 s
+Time elapsed for argparse: 0.0010225772857666016 s
+Time elapsed for read 10x data: 0.6947102546691895 s
+Time elapsed for filter cells and genes: 0.4307563304901123 s
+Time elapsed for normalize genes: 0.4548177719116211 s
+Time elapsed for highly variable genes: 0.461561918258667 s
+Time elapsed for scale: 0.17572832107543945 s
+Time elapsed for pca: 1.0705320835113525 s
+Time elapsed for neighbors: 30.613298177719116 s
+Time elapsed for louvain: 0.7953591346740723 s
+Time elapsed for umap: 14.54627013206482 s
+Time elapsed for write_h5ad: 0.7575180530548096 s
+Time elapsed for rank gene groups: 14.386387586593628 s
