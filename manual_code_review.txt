@@ -8,21 +8,20 @@ Summary:
 I reviewed the matrix-vector multiplication implementation for correctness, readability, input validation.
 
 Findings:
-1. The code correctly computes the dot product and matrix-vector multiplication for valid numeric inputs.
-2. Input validation is present for mismatched lengths and non-numeric values, which improves robustness.
-3. The function names and docstrings are clear and make the code easy to follow.
-4. One area for improvement is ...
-5. Another possible improvement is ...
+- In main(), the code uses assert statements for sanity checks. This works for testing, but if an assertion fails, it does not clearly tell the user what went wrong unless a message is added.
+- The code does a good job validating inputs, such as mismatched vector lengths, non-numeric values, and non-finite numbers.
+- The functions are split up clearly into helper functions, which makes the code easier to read and understand; ideal choice as it allows for investigation of runtime evaluation for bottleneck identification.
+- One area for improvement is efficiency. matvec_multiply() validates rows and then calls dot_product(), which validates them again. This is redundant.
 
 Strengths:
 - Clear function decomposition
-- Good use of helper function for dot product
-- Includes tests for normal and invalid inputs
+- Clear function names and docstrings for description
+- Thorough input validation and correction
+- Thorough use of error statements (TypeError and ValueError) to catch input type.
 
 Suggestions:
-- Add a test for empty vectors
-- Clarify behavior for empty matrices or zero-length inputs
-- Consider whether tuples and lists should both be accepted consistently
+- In main(), either print the actual and expected result, or add error messages to the assert statements so failures are easier to diagnose.
+- Consider avoiding repeated validation inside both matvec_multiply() and dot_product().
 
 Conclusion:
-The code is readable and mostly robust. It appears to meet the assignment goals, with a few opportunities to improve edge-case handling and test completeness.
+The code is readable, well-structured, and functionally robust. Possibly, further improvements could be made such that it caters to other edge cases as well.  
